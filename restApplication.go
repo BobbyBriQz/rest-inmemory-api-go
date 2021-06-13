@@ -13,5 +13,6 @@ func main() {
 	router = routes.InitializeRoutes(router)
 
 	fmt.Println("Starting Server")
-	log.Fatalln(http.ListenAndServe(":8080", router))
+	http.Handle("/", router)
+	log.Fatalln(http.ListenAndServe(":8080", nil))
 }
