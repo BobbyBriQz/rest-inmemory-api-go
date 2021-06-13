@@ -13,12 +13,12 @@ import (
 
 var myBookService = services.NewMyBookService()
 
-func GetBooks(w http.ResponseWriter, r *http.Request) {
+func GetBooks(w http.ResponseWriter, _ *http.Request) {
 	w.Header().Set("Content-type", "application/json")
 
 	books := myBookService.GetBooks()
 
-	_ = json.NewEncoder(w).Encode(books)
+	_ = json.NewEncoder(w).Encode(models.NewAPISuccessResponse("Retrieved Book successfully", books))
 }
 
 func GetBook(w http.ResponseWriter, r *http.Request) {
@@ -27,44 +27,43 @@ func GetBook(w http.ResponseWriter, r *http.Request) {
 	idString := mux.Vars(r)["id"]
 	id, err := strconv.Atoi(idString)
 	if err != nil {
-		_, _ = w.Write([]byte("Please provide the Book id"))
+		_ = json.NewEncoder(w).Encode(models.NewAPIFailedResponse("Please provide the Book id"))
 		return
 	}
 	book, err := myBookService.GetBook(int64(id))
 
 	if err != nil {
-		_, _ = w.Write([]byte(err.Error()))
+		_ = json.NewEncoder(w).Encode(models.NewAPIFailedResponse(err.Error()))
 		return
 	}
 
-	err1 := json.NewEncoder(w).Encode(&book)
-	if err1 != nil {
-		_, _ = w.Write([]byte(err1.Error()))
-		return
-	}
+	_ = json.NewEncoder(w).Encode(models.NewAPISuccessResponse("Retrieved Book successfully", book))
 }
 
 func PostBook(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-type", "application/json")
 
 	var book models.Book
 	err := json.NewDecoder(r.Body).Decode(&book)
-	fmt.Println(book)
+
 	defer func(Body io.ReadCloser) {
 		err := Body.Close()
 		if err != nil {
-
+			fmt.Println(err.Error())
 		}
+
 	}(r.Body)
+
 	if err != nil {
-		_, _ = w.Write([]byte(err.Error()))
+		_ = json.NewEncoder(w).Encode(models.NewAPIFailedResponse(err.Error()))
 		return
 	}
 
 	err1 := myBookService.CreateBook(book)
 	if err1 != nil {
-		_, _ = w.Write([]byte(err1.Error()))
+		_ = json.NewEncoder(w).Encode(models.NewAPIFailedResponse(err1.Error()))
 		return
 	}
 
-	_, _ = w.Write([]byte("Book Added Successfully"))
+	_ = json.NewEncoder(w).Encode(models.NewAPISuccessResponse("Book Created successfully", nil))
 }
