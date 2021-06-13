@@ -11,40 +11,40 @@ import (
 	"strconv"
 )
 
-var myBookService = services.NewMyBookService()
+var myAuthorService = services.NewMyAuthorService()
 
-func GetBooks(w http.ResponseWriter, _ *http.Request) {
+func GetAuthors(w http.ResponseWriter, _ *http.Request) {
 	w.Header().Set("Content-type", "application/json")
 
-	books := myBookService.GetBooks()
+	authors := myAuthorService.GetAuthors()
 
-	_ = json.NewEncoder(w).Encode(models.NewAPISuccessResponse("Retrieved Book successfully", books))
+	_ = json.NewEncoder(w).Encode(models.NewAPISuccessResponse("Retrieved Author successfully", authors))
 }
 
-func GetBook(w http.ResponseWriter, r *http.Request) {
+func GetAuthor(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-type", "application/json")
 
 	idString := mux.Vars(r)["id"]
 	id, err := strconv.Atoi(idString)
 	if err != nil {
-		_ = json.NewEncoder(w).Encode(models.NewAPIFailedResponse("Please provide a valid Book id"))
+		_ = json.NewEncoder(w).Encode(models.NewAPIFailedResponse("Please provide a valid Author id"))
 		return
 	}
-	book, err := myBookService.GetBook(int64(id))
+	author, err := myAuthorService.GetAuthor(int64(id))
 
 	if err != nil {
 		_ = json.NewEncoder(w).Encode(models.NewAPIFailedResponse(err.Error()))
 		return
 	}
 
-	_ = json.NewEncoder(w).Encode(models.NewAPISuccessResponse("Retrieved Book successfully", book))
+	_ = json.NewEncoder(w).Encode(models.NewAPISuccessResponse("Retrieved Author successfully", author))
 }
 
-func PostBook(w http.ResponseWriter, r *http.Request) {
+func PostAuthor(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-type", "application/json")
 
-	var book models.Book
-	err := json.NewDecoder(r.Body).Decode(&book)
+	var author models.Author
+	err := json.NewDecoder(r.Body).Decode(&author)
 
 	defer func(Body io.ReadCloser) {
 		err := Body.Close()
@@ -59,11 +59,11 @@ func PostBook(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err1 := myBookService.CreateBook(book)
+	err1 := myAuthorService.CreateAuthor(author)
 	if err1 != nil {
 		_ = json.NewEncoder(w).Encode(models.NewAPIFailedResponse(err1.Error()))
 		return
 	}
 
-	_ = json.NewEncoder(w).Encode(models.NewAPISuccessResponse("Book Created successfully", nil))
+	_ = json.NewEncoder(w).Encode(models.NewAPISuccessResponse("Author Created successfully", nil))
 }

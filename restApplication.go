@@ -8,11 +8,13 @@ import (
 	"restProject/routes"
 )
 
+const port = ":8080"
+
 func main() {
 	router := mux.NewRouter()
 	router = routes.InitializeRoutes(router)
 
-	fmt.Println("Starting Server")
+	fmt.Println("Starting Server on port", port)
 	http.Handle("/", router)
-	log.Fatalln(http.ListenAndServe(":8080", nil))
+	log.Fatalln(http.ListenAndServe(port, nil))
 }
