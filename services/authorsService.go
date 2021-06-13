@@ -3,6 +3,7 @@ package services
 import (
 	"restProject/models"
 	"restProject/repository"
+	"sort"
 )
 
 type AuthorService interface {
@@ -19,11 +20,15 @@ func NewMyAuthorService() MyAuthorService {
 }
 
 func (m MyAuthorService) GetAuthors() []models.Author {
+	authors := repository.GetAuthors()
+	sort.Slice(authors, func(i, j int) bool {
+		return authors[i].GetID() < authors[j].GetID()
+	})
 
-	return repository.GetAuthors()
+	return authors
 }
 
-func (m MyAuthorService) CreateAuthor(b models.Author) error {
+func (m MyAuthorService) CreateAuthor(b models.Author) (models.Author, error) {
 	id := len(repository.GetAuthors())
 	b.SetID(int64(id) + 1)
 

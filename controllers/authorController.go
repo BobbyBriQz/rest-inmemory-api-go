@@ -59,11 +59,11 @@ func PostAuthor(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err1 := myAuthorService.CreateAuthor(author)
+	author, err1 := myAuthorService.CreateAuthor(author)
 	if err1 != nil {
 		_ = json.NewEncoder(w).Encode(models.NewAPIFailedResponse(err1.Error()))
 		return
 	}
 
-	_ = json.NewEncoder(w).Encode(models.NewAPISuccessResponse("Author Created successfully", nil))
+	_ = json.NewEncoder(w).Encode(models.NewAPISuccessResponse("Author Created successfully", author))
 }

@@ -16,14 +16,14 @@ func GetAuthors() []models.Author {
 	return authors
 }
 
-func CreateAuthor(a models.Author) error {
+func CreateAuthor(a models.Author) (models.Author, error) {
 	authors := db.Authors
 	if _, ok := authors[a.GetID()]; ok {
-		return errors.New("Author with ID:" + strconv.Itoa(int(a.GetID())) + " already exists in db")
+		return models.Author{}, errors.New("Author with ID:" + strconv.Itoa(int(a.GetID())) + " already exists in db")
 	}
 
 	authors[a.GetID()] = a
-	return nil
+	return a, nil
 }
 
 func GetAuthor(id int64) (models.Author, error) {

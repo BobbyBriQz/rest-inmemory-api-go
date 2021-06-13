@@ -12,7 +12,7 @@ const port = ":8080"
 
 func main() {
 	router := mux.NewRouter()
-	router = routes.InitializeRoutes(router)
+	routes.InitializeRoutes(router)
 
 	fmt.Println("Starting Server on port", port)
 	http.Handle("/", router)

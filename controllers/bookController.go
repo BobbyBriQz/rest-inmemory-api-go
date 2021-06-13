@@ -59,11 +59,11 @@ func PostBook(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err1 := myBookService.CreateBook(book)
+	book, err1 := myBookService.CreateBook(book)
 	if err1 != nil {
 		_ = json.NewEncoder(w).Encode(models.NewAPIFailedResponse(err1.Error()))
 		return
 	}
 
-	_ = json.NewEncoder(w).Encode(models.NewAPISuccessResponse("Book Created successfully", nil))
+	_ = json.NewEncoder(w).Encode(models.NewAPISuccessResponse("Book Created successfully", book))
 }

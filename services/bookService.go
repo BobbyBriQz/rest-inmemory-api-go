@@ -3,6 +3,7 @@ package services
 import (
 	"restProject/models"
 	"restProject/repository"
+	"sort"
 )
 
 type BookService interface {
@@ -19,11 +20,15 @@ func NewMyBookService() MyBookService {
 }
 
 func (m MyBookService) GetBooks() []models.Book {
+	books := repository.GetBooks()
+	sort.Slice(books, func(i, j int) bool {
+		return books[i].GetID() < books[j].GetID()
+	})
 
-	return repository.GetBooks()
+	return books
 }
 
-func (m MyBookService) CreateBook(b models.Book) error {
+func (m MyBookService) CreateBook(b models.Book) (models.Book, error) {
 	id := len(repository.GetBooks())
 	b.SetID(int64(id) + 1)
 
