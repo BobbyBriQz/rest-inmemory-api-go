@@ -7,9 +7,9 @@ import (
 )
 
 type AuthorService interface {
-	GetBooks() []models.Book
-	CreateBook(b models.Book) error
-	GetBook(id int64) (models.Book, error)
+	GetAuthors() []models.Author
+	CreateAuthor(b models.Author) (models.Author, error)
+	GetAuthor(id int64) (models.Author, error)
 }
 
 type MyAuthorService struct {

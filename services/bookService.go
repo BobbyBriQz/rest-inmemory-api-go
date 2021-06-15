@@ -8,7 +8,7 @@ import (
 
 type BookService interface {
 	GetBooks() []models.Book
-	CreateBook(b models.Book) error
+	CreateBook(b models.Book) (models.Book, error)
 	GetBook(id int64) (models.Book, error)
 }
 
